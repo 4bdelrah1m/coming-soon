@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -199,7 +199,6 @@
         <div class="counter">
           <div class="count-bubble" id="countDisplay">--</div>
           <div class="meta" id="metaLine">Coming Soon</div>
-          <button id="resetDemo" title="إعادة تعيين العداد التجريبي (local demo)">....</button>
         </div>
       </div>
 
@@ -214,144 +213,42 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <script>
-    /*************** CONFIGURATION ***************
-     * Option A (recommended): Use Firebase Realtime Database
-     * 1) Create a Firebase project: https://console.firebase.google.com/
-     * 2) Add a Web App, copy the firebaseConfig object and paste below.
-     * 3) In Realtime Database set rules for testing:
-     *    { "rules": { ".read": true, ".write": true } }
-     *    (then tighten rules for production!)
-     *
-     * Option B: Leave firebaseConfig as null -> page runs in "local demo" mode
-     *********************************************/
+<script>
+  const binId = "68d6b07fae596e708ffcd270";
+  const apiKey = "$2a$10$.I0I6ECxMEo.I9R7gJ317O0ZYnkhgXSBnG6yvvObje09hz4g7NG86";
+  const visitorKey = "egypt_travels_visited";
 
-    const firebaseConfig = null; // <-- REPLACE null with your config object to enable real counter
-    /*
-    Example:
-    const firebaseConfig = {
-      apiKey: "AIza....",
-      authDomain: "yourproject.firebaseapp.com",
-      databaseURL: "https://yourproject-default-rtdb.firebaseio.com",
-      projectId: "yourproject",
-      storageBucket: "...",
-      messagingSenderId: "...",
-      appId: "1:...:web:..."
-    };
-    */
-
-    // utility: generate visitor id (persists in localStorage)
-    function getVisitorId(){
-      const key = 'pharaoh_unique_visitor_v1';
-      let id = localStorage.getItem(key);
-      if(!id){
-        if(typeof crypto !== 'undefined' && crypto.randomUUID){
-          id = crypto.randomUUID();
-        } else {
-          id = 'v-' + Date.now() + '-' + Math.floor(Math.random()*1e6);
-        }
-        localStorage.setItem(key, id);
-      }
-      return id;
-    }
-
-    const visitorId = getVisitorId();
-
-    // UI elements
-    const countDisplay = document.getElementById('countDisplay');
-    const metaLine = document.getElementById('metaLine');
-    const backendModeEl = document.getElementById('backendMode');
-    const resetBtn = document.getElementById('resetDemo');
-
-    resetBtn.addEventListener('click', () => {
-      localStorage.removeItem('pharaoh_unique_visitor_v1');
-      alert('تم إعادة تعيين المعرّف المحلي. عند التحديث سيُنشأ مُعرّف جديد (عرض تجريبي).');
-      location.reload();
+  async function getCount() {
+    let res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: { "X-Master-Key": apiKey }
     });
+    let data = await res.json();
+    return data.record.count;
+  }
 
-    // If firebaseConfig provided -> connect to realtime DB
-    if(firebaseConfig){
-      backendModeEl.textContent = 'Firebase RealtimeDB';
-      initFirebaseCounter();
+  async function updateCount() {
+    let current = await getCount();
+    if(!localStorage.getItem(visitorKey)){ 
+      current++;
+      await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": apiKey
+        },
+        body: JSON.stringify({ count: current })
+      });
+      localStorage.setItem(visitorKey, "1");
+      document.getElementById("metaLine").textContent = "Counted as new visitor ";
     } else {
-      backendModeEl.textContent = 'Local demo (no backend)';
-      runLocalDemo();
+      document.getElementById("metaLine").textContent = "Already counted ";
     }
+    return current;
+  }
 
-    // ---------- Firebase mode ----------
-    function initFirebaseCounter(){
-      try{
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        metaLine.textContent = 'التوصيل بقاعدة البيانات...';
-
-        // Path structure:
-        // /visitors/{visitorId} : true
-        // /meta/count : integer
-
-        const visitorRef = db.ref('visitors/' + visitorId);
-        visitorRef.once('value').then(snap => {
-          if(!snap.exists()){
-            // new visitor -> mark and increment count atomically
-            visitorRef.set({ seenAt: Date.now() })
-              .then(() => {
-                // transaction to increment count
-                const countRef = db.ref('meta/count');
-                countRef.transaction(current => {
-                  return (current || 0) + 1;
-                }, (err, committed, snapshot) => {
-                  if(err){
-                    console.error('tx err', err);
-                    metaLine.textContent = 'حدث خطأ أثناء التحديث';
-                  } else {
-                    metaLine.textContent = 'تم تسجيل زيارة جديدة';
-                  }
-                });
-              }).catch(err=>{
-                console.error(err);
-                metaLine.textContent = 'خطأ في تسجيل الزائر';
-              });
-          } else {
-            metaLine.textContent = 'الزائر معروف (لم تُسجّل زيارة مزدوجة)';
-          }
-        }).catch(err=>{
-          console.error(err);
-          metaLine.textContent = 'خطأ في قراءة حالة الزائر';
-        });
-
-        // Listen to count updates
-        const countRefListen = db.ref('meta/count');
-        countRefListen.on('value', snap => {
-          const val = snap.val() || 0;
-          countDisplay.textContent = val;
-        });
-
-      }catch(e){
-        console.error(e);
-        metaLine.textContent = 'فشل تهيئة Firebase. تأكد من إعداد firebaseConfig صحيح.';
-        runLocalDemo(); // fallback
-      }
-    }
-
-    // ---------- Local demo mode ----------
-    function runLocalDemo(){
-      metaLine.textContent = 'وضع العرض التجريبي — العداد محلي وغير مشترك.';
-      // ensure we count this browser only once by flagging 'demo_counted'
-      const demoKey = 'pharaoh_demo_counted_v1';
-      let displayCount = parseInt(localStorage.getItem('pharaoh_demo_total')) || 0;
-      const counted = localStorage.getItem(demoKey);
-
-      if(!counted){
-        displayCount++;
-        localStorage.setItem('pharaoh_demo_total', displayCount);
-        localStorage.setItem(demoKey, '1');
-        metaLine.textContent = 'The Winter Is coming — counted as new visitor!';
-      } else {
-        metaLine.textContent ='The Winter Is coming — counted as new visitor! (already counted)';
-      }
-      countDisplay.textContent = displayCount;
-    }
-  </script>
+  updateCount().then(c => {
+    document.getElementById("countDisplay").textContent = c;
+  });
+</script>
 </body>
 </html>
