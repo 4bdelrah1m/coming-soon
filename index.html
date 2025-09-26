@@ -1,12 +1,357 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egypt Travels - Coming Soon</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Egypt Travels - Coming Soon</title>
+
+  <!-- Google Fonts (مدرن + كلاسيكي) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=PT+Sans+Caption&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --sand:#E9D3A6;
+      --gold:#C79A2E;
+      --dark:#1B1B17;
+      --accent:#6B3E12;
+      --glass: rgba(255,255,255,0.06);
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "PT Sans Caption", sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(199,154,46,0.06), transparent 10%),
+        linear-gradient(180deg, #0f0f0d 0%, #12100f 60%);
+      color:var(--sand);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Container */
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      box-sizing:border-box;
+    }
+
+    /* Card */
+    .card{
+      width:100%;
+      max-width:920px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 30px rgba(3,3,3,0.6);
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+
+    /* Left: hero with design */
+    .hero{
+      padding:36px;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .logo-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:62px; height:62px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--gold), #e0b64a);
+      box-shadow: 0 6px 18px rgba(199,154,46,0.18), inset 0 -6px 10px rgba(0,0,0,0.12);
+      font-family: 'Cinzel', serif;
+      font-weight:700;
+      color:var(--dark);
+      font-size:28px;
+    }
+    h1{
+      margin:0;
+      font-family:'Cinzel', serif;
+      font-size:36px;
+      color:var(--sand);
+      letter-spacing:1px;
+    }
+    p.lead{
+      margin:0;
+      color: #dcd0b3;
+      opacity:0.95;
+      max-width:58ch;
+      line-height:1.5;
+    }
+
+    /* Right: counter panel */
+    .panel{
+      background: linear-gradient(180deg, rgba(107,62,18,0.05), rgba(0,0,0,0.02));
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .counter{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+
+    .count-bubble{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:18px 26px;
+      font-size:46px;
+      font-family:'Cinzel', serif;
+      letter-spacing:2px;
+      border:1px solid rgba(255,255,255,0.03);
+      min-width:160px;
+      text-align:center;
+      color:var(--gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 -6px 12px rgba(255,255,255,0.02);
+    }
+
+    .meta{
+      color:#cfc3a1;
+      font-size:14px;
+      text-align:center;
+    }
+
+    button#resetDemo{
+      background:transparent;
+      border:1px dashed rgba(255,255,255,0.06);
+      color:var(--sand);
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    /* decorative glyphs */
+    .glyphs{
+      position:absolute;
+      right:18px; top:18px;
+      opacity:0.06;
+      font-size:120px;
+      transform:rotate(-8deg);
+      user-select:none;
+    }
+
+    footer{
+      grid-column: 1 / -1;
+      padding:12px 24px;
+      color:#bfb191;
+      font-size:13px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+    }
+
+    @media (max-width:880px){
+      .card{ grid-template-columns: 1fr; }
+      .glyphs{ display:none; }
+      .panel{ order:-1; }
+    }
+  </style>
 </head>
 <body>
-    Hello World!
-    adsasda
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="hero">
+        <div class="logo-row">
+          <div class="logo">𓂀</div>
+          <div>
+            <div style="font-size:12px; color:#d9caa1;">Egypt Travels</div>
+            <div style="font-size:11px; color:#c9b88a;">Coming Soon</div>
+          </div>
+        </div>
+
+        <h1>Discover Egypt With us </h1>
+        <!-- <p class="lead">تصميم واجهة مستوحاة من النقوش والهندسة الفرعونية مع ألوان رمال وذهب. في الأسفل عداد الزوار الفريد — كل زائر مرّة واحدة فقط من نفس الجهاز.</p> -->
+
+        <div style="margin-top:16px;">
+          <small style="color:#c9b88a">With our unique Tours offers </small>
+        </div>
+
+        <div class="glyphs">𓂀 𓆣 𓃰</div>
+      </div>
+
+      <div class="panel">
+        <div class="counter">
+          <div class="count-bubble" id="countDisplay">--</div>
+          <div class="meta" id="metaLine">Coming Soon</div>
+          <button id="resetDemo" title="إعادة تعيين العداد التجريبي (local demo)">....</button>
+        </div>
+      </div>
+
+      <footer>
+        <div>© Egypt Travels</div>
+        <div style="opacity:0.9; font-size:13px;">مفعل: <span id="backendMode">--</span></div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs (only needed if تستخدم Firebase) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    /*************** CONFIGURATION ***************
+     * Option A (recommended): Use Firebase Realtime Database
+     * 1) Create a Firebase project: https://console.firebase.google.com/
+     * 2) Add a Web App, copy the firebaseConfig object and paste below.
+     * 3) In Realtime Database set rules for testing:
+     *    { "rules": { ".read": true, ".write": true } }
+     *    (then tighten rules for production!)
+     *
+     * Option B: Leave firebaseConfig as null -> page runs in "local demo" mode
+     *********************************************/
+
+    const firebaseConfig = null; // <-- REPLACE null with your config object to enable real counter
+    /*
+    Example:
+    const firebaseConfig = {
+      apiKey: "AIza....",
+      authDomain: "yourproject.firebaseapp.com",
+      databaseURL: "https://yourproject-default-rtdb.firebaseio.com",
+      projectId: "yourproject",
+      storageBucket: "...",
+      messagingSenderId: "...",
+      appId: "1:...:web:..."
+    };
+    */
+
+    // utility: generate visitor id (persists in localStorage)
+    function getVisitorId(){
+      const key = 'pharaoh_unique_visitor_v1';
+      let id = localStorage.getItem(key);
+      if(!id){
+        if(typeof crypto !== 'undefined' && crypto.randomUUID){
+          id = crypto.randomUUID();
+        } else {
+          id = 'v-' + Date.now() + '-' + Math.floor(Math.random()*1e6);
+        }
+        localStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    const visitorId = getVisitorId();
+
+    // UI elements
+    const countDisplay = document.getElementById('countDisplay');
+    const metaLine = document.getElementById('metaLine');
+    const backendModeEl = document.getElementById('backendMode');
+    const resetBtn = document.getElementById('resetDemo');
+
+    resetBtn.addEventListener('click', () => {
+      localStorage.removeItem('pharaoh_unique_visitor_v1');
+      alert('تم إعادة تعيين المعرّف المحلي. عند التحديث سيُنشأ مُعرّف جديد (عرض تجريبي).');
+      location.reload();
+    });
+
+    // If firebaseConfig provided -> connect to realtime DB
+    if(firebaseConfig){
+      backendModeEl.textContent = 'Firebase RealtimeDB';
+      initFirebaseCounter();
+    } else {
+      backendModeEl.textContent = 'Local demo (no backend)';
+      runLocalDemo();
+    }
+
+    // ---------- Firebase mode ----------
+    function initFirebaseCounter(){
+      try{
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        metaLine.textContent = 'التوصيل بقاعدة البيانات...';
+
+        // Path structure:
+        // /visitors/{visitorId} : true
+        // /meta/count : integer
+
+        const visitorRef = db.ref('visitors/' + visitorId);
+        visitorRef.once('value').then(snap => {
+          if(!snap.exists()){
+            // new visitor -> mark and increment count atomically
+            visitorRef.set({ seenAt: Date.now() })
+              .then(() => {
+                // transaction to increment count
+                const countRef = db.ref('meta/count');
+                countRef.transaction(current => {
+                  return (current || 0) + 1;
+                }, (err, committed, snapshot) => {
+                  if(err){
+                    console.error('tx err', err);
+                    metaLine.textContent = 'حدث خطأ أثناء التحديث';
+                  } else {
+                    metaLine.textContent = 'تم تسجيل زيارة جديدة';
+                  }
+                });
+              }).catch(err=>{
+                console.error(err);
+                metaLine.textContent = 'خطأ في تسجيل الزائر';
+              });
+          } else {
+            metaLine.textContent = 'الزائر معروف (لم تُسجّل زيارة مزدوجة)';
+          }
+        }).catch(err=>{
+          console.error(err);
+          metaLine.textContent = 'خطأ في قراءة حالة الزائر';
+        });
+
+        // Listen to count updates
+        const countRefListen = db.ref('meta/count');
+        countRefListen.on('value', snap => {
+          const val = snap.val() || 0;
+          countDisplay.textContent = val;
+        });
+
+      }catch(e){
+        console.error(e);
+        metaLine.textContent = 'فشل تهيئة Firebase. تأكد من إعداد firebaseConfig صحيح.';
+        runLocalDemo(); // fallback
+      }
+    }
+
+    // ---------- Local demo mode ----------
+    function runLocalDemo(){
+      metaLine.textContent = 'وضع العرض التجريبي — العداد محلي وغير مشترك.';
+      // ensure we count this browser only once by flagging 'demo_counted'
+      const demoKey = 'pharaoh_demo_counted_v1';
+      let displayCount = parseInt(localStorage.getItem('pharaoh_demo_total')) || 0;
+      const counted = localStorage.getItem(demoKey);
+
+      if(!counted){
+        displayCount++;
+        localStorage.setItem('pharaoh_demo_total', displayCount);
+        localStorage.setItem(demoKey, '1');
+        metaLine.textContent = 'تم احتساب زيارتك (محلي)';
+      } else {
+        metaLine.textContent = 'أنت معروف محليًا — لم تُحتسب مرتين في العرض التجريبي';
+      }
+      countDisplay.textContent = displayCount;
+    }
+  </script>
 </body>
 </html>
