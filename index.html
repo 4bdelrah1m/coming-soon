@@ -346,9 +346,9 @@
         displayCount++;
         localStorage.setItem('pharaoh_demo_total', displayCount);
         localStorage.setItem(demoKey, '1');
-        metaLine.textContent = 'تم احتساب زيارتك (محلي)';
+        metaLine.textContent = 'The Winter Is coming — counted as new visitor!';
       } else {
-        metaLine.textContent = 'أنت معروف محليًا — لم تُحتسب مرتين في العرض التجريبي';
+        metaLine.textContent ='The Winter Is coming — counted as new visitor! (already counted)';
       }
       countDisplay.textContent = displayCount;
     }
